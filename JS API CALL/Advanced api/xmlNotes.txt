@@ -1,0 +1,65 @@
+1. Create an XMLHttpRequest Object
+javascript
+Copy code
+const xhr = new XMLHttpRequest();
+The XMLHttpRequest object is created to facilitate communication between the browser and a server.
+It is used to send requests and receive responses from servers asynchronously.
+2. Open a Request
+javascript
+Copy code
+xhr.open('GET', requestUrl);
+The open() method initializes a request.
+The method ('GET') specifies the type of request (GET, POST, etc.).
+The URL (requestUrl) specifies the endpoint to send the request to.
+This does not send the request; it just prepares the xhr object.
+3. Define a Callback for onreadystatechange
+javascript
+Copy code
+xhr.onreadystatechange = function() {
+    console.log(xhr.readyState);
+    if (xhr.readyState === 4 && xhr.status === 200) {
+        const data = JSON.parse(this.responseText);
+        console.log(data.followers);
+        console.log(data.avatar_url);
+    }
+};
+The onreadystatechange event is triggered whenever the readyState of the xhr object changes.
+Inside the callback:
+xhr.readyState: Indicates the state of the request. Its values are:
+0 (UNSENT): Request has been created but not initialized (open() not called).
+1 (OPENED): open() has been called.
+2 (HEADERS_RECEIVED): send() has been called, and headers/status are available.
+3 (LOADING): Response is being downloaded (partial data may be available in responseText).
+4 (DONE): Request is complete, and full response is available.
+xhr.status: Checks the HTTP response status code:
+200 means success (the data is available and valid).
+Other codes like 404 or 500 indicate errors.
+4. Parse the Response
+javascript
+Copy code
+const data = JSON.parse(this.responseText);
+Once the readyState is 4 and status is 200, the server response is accessed via this.responseText.
+responseText contains the server's response as a raw string.
+The JSON.parse() method converts the JSON-formatted string into a JavaScript object.
+5. Extract Data
+javascript
+Copy code
+console.log(data.followers);
+console.log(data.avatar_url);
+Extract specific pieces of data from the parsed response object (data).
+For example, data.followers fetches the number of followers, and data.avatar_url fetches the URL of the user’s avatar.
+6. Send the Request
+javascript
+Copy code
+xhr.send();
+The send() method dispatches the request to the server.
+For a GET request, no additional body data is sent.
+After this, the browser waits for the server's response and triggers the onreadystatechange callback as the readyState changes.
+Overall Workflow
+Create: An XMLHttpRequest object is created.
+Initialize: The request is initialized using xhr.open().
+Define Callback: The onreadystatechange function is defined to handle the response.
+Send: The request is sent using xhr.send().
+Receive: The server's response is processed when xhr.readyState === 4 and xhr.status === 200.
+Extract: Data from the response is parsed and used as needed.
+This approach allows asynchronous requests, meaning the browser can continue processing other code while waiting for the server's response
